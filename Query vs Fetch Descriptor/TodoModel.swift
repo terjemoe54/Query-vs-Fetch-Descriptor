@@ -12,10 +12,17 @@ import SwiftData
 class TodoModel {
     var title: String
     var date: Date
+    var isCompleted: Bool
     
-    init(title: String, date: Date) {
+    init(
+    title: String,
+    date:Date = Date(),
+    isCompleted: Bool = false
+    ) {
         self.title = title
         self.date = date
+        self.isCompleted = isCompleted
+    
     }
     
 }

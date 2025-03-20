@@ -75,8 +75,17 @@ struct TodoListView: View {
                 // List
                 List(sortedTodoes) { todo in
                     HStack {
+                        Button {
+                            toggleComletion(todo)
+                        } label: {
+                            Image(systemName: todo.isCompleted ? "checkmark.circle" : "circle")
+                                .font(.caption)
+                                .foregroundStyle(todo.isCompleted ? .green : .gray)
+                        }
                         Text(todo.title)
-                        Spacer()
+                            .foregroundStyle(todo.isCompleted ? .gray : .blue)
+                            .strikethrough(todo.isCompleted, color: .gray)
+                             Spacer()
                         VStack(alignment: .leading) {
                             Text(todo.date, style: .date)
                             Text(todo.date, style: .time)
@@ -124,6 +133,14 @@ struct TodoListView: View {
         try? modelContext.save()
         
     }
+    
+    private func toggleComletion(_ todo: TodoModel) {
+        todo.isCompleted.toggle()
+        try? modelContext.save()
+        
+    }
+    
+    
 }
 
 #Preview {
