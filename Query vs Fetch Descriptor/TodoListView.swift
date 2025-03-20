@@ -44,7 +44,7 @@ struct TodoListView: View {
                         TextField("New Todo", text: $newTitle)
                             .textFieldStyle(.roundedBorder)
                         Button {
-                            
+                            addTodo()
                         } label: {
                             Text("Add")
                                 .padding()
@@ -91,8 +91,24 @@ struct TodoListView: View {
     }
     
         
-    private func addTodoes() {
+    private func addTodo() {
+        guard newTitle.count >= 2 else {
+            print("The title must have at least two elements")
+            return
+        }
+        let newTodo = TodoModel(title: newTitle,
+                                date: selectedDate
+        )
+        modelContext.insert(newTodo)
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save the new todo: \(error.localizedDescription)")
+            
+        }
         
+        newTitle = ""
+        selectedDate = Date()
     }
     
     private func deleteTodo(_ todo: TodoModel) {
