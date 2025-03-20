@@ -5,6 +5,9 @@
 //  Created by Terje Moe on 20/03/2025.
 //
 
+
+
+
 import SwiftUI
 import SwiftData
 
@@ -21,6 +24,15 @@ struct TodoListView: View {
     enum SortOption: String, CaseIterable {
         case byTitle = "By Title"
         case byDate = "By Date"
+    }
+    
+    private var sortedTodoes: [TodoModel] {
+        switch selectedSortOption {
+        case .byTitle:
+            return titleTodos
+        case .byDate:
+            return dateTodos
+        }
     }
     
     var body: some View {
@@ -59,22 +71,26 @@ struct TodoListView: View {
                         .pickerStyle(SegmentedPickerStyle())
                 }
                 .padding()
+            
                 // List
-                Spacer()
+                List(sortedTodoes) { todo in
+                    HStack {
+                        Text(todo.title)
+                        Spacer()
+                        VStack(alignment: .leading) {
+                            Text(todo.date, style: .date)
+                            Text(todo.date, style: .time)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }.listStyle(PlainListStyle())
             }
             .navigationTitle("Todoes")
         }
     }
     
-    private var sortedTodoes: [TodoModel] {
-        switch selectedSortOption {
-        case .byTitle:
-            return titleTodos
-        case .byDate:
-            return dateTodos
-        }
-    }
-    
+        
     private func addTodoes() {
         
     }
