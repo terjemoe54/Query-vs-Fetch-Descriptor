@@ -84,6 +84,14 @@ struct TodoListView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            deleteTodo(todo)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+
+                    }
                 }.listStyle(PlainListStyle())
             }
             .navigationTitle("Todoes")
@@ -112,6 +120,8 @@ struct TodoListView: View {
     }
     
     private func deleteTodo(_ todo: TodoModel) {
+        modelContext.delete(todo)
+        try? modelContext.save()
         
     }
 }
