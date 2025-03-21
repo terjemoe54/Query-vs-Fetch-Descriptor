@@ -14,6 +14,19 @@ struct TodoListView: View {
     @Query(sort: [SortDescriptor(\TodoModel.date)]) var dateTodos: [TodoModel]
     @Query(sort: [SortDescriptor(\TodoModel.title)]) var titleTodos: [TodoModel]
     
+    // Completed todos for date
+    @Query(
+        filter: #Predicate<TodoModel> { $0.isCompleted == true },
+        sort: [SortDescriptor(\TodoModel.date)])
+    var completedDateTodos: [TodoModel]
+                             
+    // Completed todos for title
+    @Query(
+        filter: #Predicate<TodoModel> { $0.isCompleted == true },
+        sort: [SortDescriptor(\TodoModel.title)])
+    var completedTitleTodos: [TodoModel]
+    
+    @State private var showCompletedOnly: Bool = false
     @State private var newTitle: String = ""
     @State private var selectedSortOption: SortOption = .byTitle
     @State private var selectedDate: Date = Date()
@@ -26,9 +39,9 @@ struct TodoListView: View {
     private var sortedTodoes: [TodoModel] {
         switch selectedSortOption {
         case .byTitle:
-            return titleTodos
+            showCompletedOnly ? completedTitleTodos : titleTodos
         case .byDate:
-            return dateTodos
+            showCompletedOnly ? completedDateTodos : dateTodos
         }
     }
     
@@ -65,6 +78,8 @@ struct TodoListView: View {
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())
+                    // Toggle Completion
+                    Toggle("Show Completed Only", isOn: $showCompletedOnly)
                 }
                 .padding()
                 
