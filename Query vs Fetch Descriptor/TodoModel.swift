@@ -15,14 +15,12 @@ class TodoModel {
     var isCompleted: Bool
     
     init(
-    title: String,
-    date:Date = Date(),
-    isCompleted: Bool = false
+        title: String,
+        date:Date = Date(),
+        isCompleted: Bool = false
     ) {
         self.title = title
         self.date = date
         self.isCompleted = isCompleted
-    
     }
-    
 }

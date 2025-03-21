@@ -49,14 +49,13 @@ struct TodoListView: View {
                                 .clipShape(.rect(cornerRadius: 10))
                                 .foregroundStyle(.white)
                         }
-
                     }
-                   // Date Picker
+                    // Date Picker
                     DatePicker("Select Date",
                                selection: $selectedDate,
                                in: Date()...
                     )
-                   // Segmented picker
+                    // Segmented picker
                     Picker(
                         "Sort Todoes",
                         selection: $selectedSortOption) {
@@ -68,7 +67,7 @@ struct TodoListView: View {
                         .pickerStyle(SegmentedPickerStyle())
                 }
                 .padding()
-            
+                
                 // List
                 List(sortedTodoes) { todo in
                     HStack {
@@ -82,7 +81,7 @@ struct TodoListView: View {
                         Text(todo.title)
                             .foregroundStyle(todo.isCompleted ? .gray : .blue)
                             .strikethrough(todo.isCompleted, color: .gray)
-                             Spacer()
+                        Spacer()
                         VStack(alignment: .leading) {
                             Text(todo.date, style: .date)
                             Text(todo.date, style: .time)
@@ -96,7 +95,7 @@ struct TodoListView: View {
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
-
+                        
                     }
                 }.listStyle(PlainListStyle())
             }
@@ -104,23 +103,20 @@ struct TodoListView: View {
         }
     }
     
-        
+    
     private func addTodo() {
         guard newTitle.count >= 2 else {
             print("The title must have at least two elements")
             return
         }
-        let newTodo = TodoModel(title: newTitle,
-                                date: selectedDate
+        let newTodo = TodoModel(title: newTitle, date: selectedDate
         )
         modelContext.insert(newTodo)
         do {
             try modelContext.save()
         } catch {
             print("Failed to save the new todo: \(error.localizedDescription)")
-            
         }
-        
         newTitle = ""
         selectedDate = Date()
     }
@@ -128,16 +124,12 @@ struct TodoListView: View {
     private func deleteTodo(_ todo: TodoModel) {
         modelContext.delete(todo)
         try? modelContext.save()
-        
     }
     
     private func toggleComletion(_ todo: TodoModel) {
         todo.isCompleted.toggle()
         try? modelContext.save()
-        
     }
-    
-    
 }
 
 #Preview {
