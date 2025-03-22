@@ -61,6 +61,24 @@ struct TodoListView: View {
     private var sevenDaysTodo: [TodoModel]
    */
     
+    // Today todos
+    static var todayFetchDescriptor: FetchDescriptor<TodoModel> {
+        let now = Date()
+        let calendar = Calendar.current
+        
+        let beginningOfDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: now)!
+        let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: now)!
+       
+        let descriptor = FetchDescriptor<TodoModel>(
+            predicate: #Predicate { $0.date >= beginningOfDay && $0.date <= endOfDay },sortBy: [SortDescriptor(\.date)])
+ 
+        return descriptor
+    }
+    @Query(TodoListView.todayFetchDescriptor)
+    private var todaysDaysTodo: [TodoModel]
+    
+    @State private var showTodaysTodos: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -96,12 +114,15 @@ struct TodoListView: View {
                         .pickerStyle(SegmentedPickerStyle())
                     // Toggle Completion
                     Toggle("Show Completed Only", isOn: $showCompletedOnly)
+                    
+                    // Toggle show today
+                    Toggle("Show Today Todos", isOn: $showTodaysTodos)
                 }
                 .padding()
                 
                 // List
   //            List(sevenDaysTodo) { todo in
-                  List(sortedTodoes) { todo in
+                List(showTodaysTodos ? todaysDaysTodo : sortedTodoes) { todo in
                     HStack {
                         Button {
                             toggleComletion(todo)
