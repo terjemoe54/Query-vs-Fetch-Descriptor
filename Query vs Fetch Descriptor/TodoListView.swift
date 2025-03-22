@@ -19,7 +19,7 @@ struct TodoListView: View {
         filter: #Predicate<TodoModel> { $0.isCompleted == true },
         sort: [SortDescriptor(\TodoModel.date)])
     var completedDateTodos: [TodoModel]
-                             
+    
     // Completed todos for title
     @Query(
         filter: #Predicate<TodoModel> { $0.isCompleted == true },
@@ -39,9 +39,9 @@ struct TodoListView: View {
     private var sortedTodoes: [TodoModel] {
         switch selectedSortOption {
         case .byTitle:
-            showCompletedOnly ? completedTitleTodos : titleTodos
+           return titleTodos
         case .byDate:
-            showCompletedOnly ? completedDateTodos : dateTodos
+           return dateTodos
         }
     }
     
