@@ -110,9 +110,21 @@ struct TodoListView: View {
                     //Tag selection
                     ScrollView(.horizontal) {
                         HStack {
-                            
+                            ForEach(Tag.allCases, id: \.self) { tag in
+                                Button {
+                                    toggleTag(tag)
+                                } label: {
+                                    Text(tag.rawValue.capitalized)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .background(selectedTags.contains(tag) ? tag.color.opacity(0.8) : .gray.opacity(0.3))
+                                        .foregroundStyle(.white)
+                                        .clipShape(Capsule())
+                                }
+
+                            }
                         }
-                    }
+                    }.scrollIndicators(.hidden)
                     
                     // Segmented picker
                     Picker(
@@ -147,11 +159,28 @@ struct TodoListView: View {
                             .foregroundStyle(todo.isCompleted ? .gray : .blue)
                             .strikethrough(todo.isCompleted, color: .gray)
                         Spacer()
-                        VStack(alignment: .leading) {
-                            Text(todo.date, style: .date)
-                            Text(todo.date, style: .time)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                        VStack(alignment: .trailing) {
+                            VStack(alignment: .leading) {
+                                Text(todo.date, style: .date)
+                                Text(todo.date, style: .time)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            HStack {
+                                let tagsSorted = todo.tags.sorted(by: { $0.rawValue < $1.rawValue})
+                                
+                                ForEach(tagsSorted, id: \.self) { tag in
+                                    Text(tag.rawValue.capitalized)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(tag.color)
+                                        .foregroundStyle(.white)
+                                        .font(.caption)
+                                        .clipShape(Capsule())
+                                        
+                                }
+                            }
                         }
                     }
                     .swipeActions {
@@ -174,8 +203,7 @@ struct TodoListView: View {
             print("The title must have at least two elements")
             return
         }
-        let newTodo = TodoModel(title: newTitle, date: selectedDate
-        )
+        let newTodo = TodoModel(title: newTitle, date: selectedDate, tags: selectedTags)
         modelContext.insert(newTodo)
         do {
             try modelContext.save()
@@ -184,6 +212,8 @@ struct TodoListView: View {
         }
         newTitle = ""
         selectedDate = Date()
+        selectedTags = []
+        tagCount = 0
     }
     
     private func deleteTodo(_ todo: TodoModel) {
@@ -194,6 +224,18 @@ struct TodoListView: View {
     private func toggleComletion(_ todo: TodoModel) {
         todo.isCompleted.toggle()
         try? modelContext.save()
+    }
+    
+    private func toggleTag(_ tag: Tag) {
+        if selectedTags.contains(tag) {
+            selectedTags.remove(tag)
+            tagCount -= 1
+        } else {
+            if tagCount < 3 {
+                selectedTags.insert(tag)
+                tagCount += 1
+            }
+        }
     }
 }
 
