@@ -79,6 +79,10 @@ struct TodoListView: View {
     
     @State private var showTodaysTodos: Bool = false
     
+    // Tags
+    @State private var selectedTags: Set<Tag> = []
+    @State private var tagCount = 0
+      
     var body: some View {
         NavigationStack {
             VStack {
@@ -102,6 +106,14 @@ struct TodoListView: View {
                                selection: $selectedDate,
                                in: Date()...
                     )
+                    
+                    //Tag selection
+                    ScrollView(.horizontal) {
+                        HStack {
+                            
+                        }
+                    }
+                    
                     // Segmented picker
                     Picker(
                         "Sort Todoes",

@@ -7,20 +7,43 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 class TodoModel {
     var title: String
     var date: Date
     var isCompleted: Bool
+    var tags: Set<Tag>
     
     init(
         title: String,
         date:Date = Date(),
-        isCompleted: Bool = false
+        isCompleted: Bool = false,
+        tags: Set<Tag> = []
     ) {
         self.title = title
         self.date = date
         self.isCompleted = isCompleted
+        self.tags = tags
+    }
+}
+
+enum Tag: String, Codable, CaseIterable {
+    case work, personal, urgent, shopping, study
+    
+    var color: Color {
+        switch self {
+        case .work:
+                .blue
+        case .personal:
+                .purple
+        case .urgent:
+                .red
+        case .shopping:
+                .green
+        case .study:
+                .orange
+        }
     }
 }
