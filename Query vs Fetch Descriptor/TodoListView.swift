@@ -39,9 +39,9 @@ struct TodoListView: View {
     private var sortedTodoes: [TodoModel] {
         switch selectedSortOption {
         case .byTitle:
-           return titleTodos
+            showCompletedOnly ? completedTitleTodos : titleTodos
         case .byDate:
-           return dateTodos
+            showCompletedOnly ? completedDateTodos : dateTodos
         }
     }
     
