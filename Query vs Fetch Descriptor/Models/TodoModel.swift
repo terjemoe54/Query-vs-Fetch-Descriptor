@@ -11,10 +11,10 @@ import SwiftUI
 
 @Model
 class TodoModel {
-    var title: String
-    var date: Date
-    var isCompleted: Bool
-    var tags: Set<Tag>
+    var title: String = ""
+    var date: Date = Date()
+    var isCompleted: Bool = false
+    var tags: Set<Tag>? = []
     
     init(
         title: String,

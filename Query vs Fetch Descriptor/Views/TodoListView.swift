@@ -128,9 +128,9 @@ struct TodoListView: View {
                             }
                             
                             HStack {
-                                let tagsSorted = todo.tags.sorted(by: { $0.rawValue < $1.rawValue})
+                                let tagsSorted = todo.tags?.sorted(by: { $0.rawValue < $1.rawValue})
                                 
-                                ForEach(tagsSorted, id: \.self) { tag in
+                                ForEach(tagsSorted ?? [], id: \.self) { tag in
                                     Text(tag.rawValue.capitalized)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 4)
