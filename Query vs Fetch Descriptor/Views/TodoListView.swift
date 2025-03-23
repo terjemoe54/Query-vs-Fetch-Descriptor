@@ -31,10 +31,7 @@ struct TodoListView: View {
     @State private var selectedSortOption: SortOption = .byTitle
     @State private var selectedDate: Date = Date()
     
-    enum SortOption: String, CaseIterable {
-        case byTitle = "By Title"
-        case byDate = "By Date"
-    }
+    
     
     private var sortedTodoes: [TodoModel] {
         switch selectedSortOption {
@@ -44,22 +41,22 @@ struct TodoListView: View {
             showCompletedOnly ? completedDateTodos : dateTodos
         }
     }
-   /*
-    // Fetch descriptor for all todos from now up until
-    // at most seven. (Seven days into the future)
-    
-    static var sevenDaysFetchDescriptor: FetchDescriptor<TodoModel> {
-        let now = Date()
-        let inAWeek = Calendar.current.date(byAdding: .day, value: 7, to: now)!
-        let descriptor = FetchDescriptor<TodoModel>(
-            predicate: #Predicate { $0.date <= inAWeek },sortBy: [SortDescriptor(\.date)])
- 
-        return descriptor
-    }
-    
-    @Query(TodoListView.sevenDaysFetchDescriptor)
-    private var sevenDaysTodo: [TodoModel]
-   */
+    /*
+     // Fetch descriptor for all todos from now up until
+     // at most seven. (Seven days into the future)
+     
+     static var sevenDaysFetchDescriptor: FetchDescriptor<TodoModel> {
+     let now = Date()
+     let inAWeek = Calendar.current.date(byAdding: .day, value: 7, to: now)!
+     let descriptor = FetchDescriptor<TodoModel>(
+     predicate: #Predicate { $0.date <= inAWeek },sortBy: [SortDescriptor(\.date)])
+     
+     return descriptor
+     }
+     
+     @Query(TodoListView.sevenDaysFetchDescriptor)
+     private var sevenDaysTodo: [TodoModel]
+     */
     
     // Today todos
     static var todayFetchDescriptor: FetchDescriptor<TodoModel> {
@@ -68,10 +65,10 @@ struct TodoListView: View {
         
         let beginningOfDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: now)!
         let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: now)!
-       
+        
         let descriptor = FetchDescriptor<TodoModel>(
             predicate: #Predicate { $0.date >= beginningOfDay && $0.date <= endOfDay },sortBy: [SortDescriptor(\.date)])
- 
+        
         return descriptor
     }
     @Query(TodoListView.todayFetchDescriptor)
@@ -82,70 +79,33 @@ struct TodoListView: View {
     // Tags
     @State private var selectedTags: Set<Tag> = []
     @State private var tagCount = 0
-      
+    
     var body: some View {
         NavigationStack {
             VStack {
                 VStack  {
                     // Text Field
-                    HStack {
-                        TextField("New Todo", text: $newTitle)
-                            .textFieldStyle(.roundedBorder)
-                        Button {
-                            addTodo()
-                        } label: {
-                            Text("Add")
-                                .padding()
-                                .background(.blue)
-                                .clipShape(.rect(cornerRadius: 10))
-                                .foregroundStyle(.white)
-                        }
+                    InputView(newTitle: $newTitle) {
+                        addTodo()
                     }
                     // Date Picker
-                    DatePicker("Select Date",
-                               selection: $selectedDate,
-                               in: Date()...
-                    )
+                    SelectDateView(selectedDate: $selectedDate)
                     
                     //Tag selection
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(Tag.allCases, id: \.self) { tag in
-                                Button {
-                                    toggleTag(tag)
-                                } label: {
-                                    Text(tag.rawValue.capitalized)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 5)
-                                        .background(selectedTags.contains(tag) ? tag.color.opacity(0.8) : .gray.opacity(0.3))
-                                        .foregroundStyle(.white)
-                                        .clipShape(Capsule())
-                                }
-
-                            }
-                        }
-                    }.scrollIndicators(.hidden)
+                    TagSelectionView(action: { tag in
+                        toggleTag(tag)
+                    }, selectedTags: selectedTags)
                     
                     // Segmented picker
-                    Picker(
-                        "Sort Todoes",
-                        selection: $selectedSortOption) {
-                            ForEach(SortOption.allCases, id: \.self) { option in
-                                Text(option.rawValue)
-                                    .tag(option)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                    // Toggle Completion
-                    Toggle("Show Completed Only", isOn: $showCompletedOnly)
+                    SegmentPickerView(selectedSortOption: $selectedSortOption)
                     
-                    // Toggle show today
-                    Toggle("Show Today Todos", isOn: $showTodaysTodos)
+                    // Toggle completion
+                    ToggleViews(showCompletedOnly: $showCompletedOnly, showTodaysTodos: $showTodaysTodos)
                 }
                 .padding()
                 
                 // List
-  //            List(sevenDaysTodo) { todo in
+                //            List(sevenDaysTodo) { todo in
                 List(showTodaysTodos ? todaysDaysTodo : sortedTodoes) { todo in
                     HStack {
                         Button {
@@ -178,7 +138,7 @@ struct TodoListView: View {
                                         .foregroundStyle(.white)
                                         .font(.caption)
                                         .clipShape(Capsule())
-                                        
+                                    
                                 }
                             }
                         }
@@ -238,6 +198,8 @@ struct TodoListView: View {
         }
     }
 }
+
+
 
 #Preview {
     TodoListView()
