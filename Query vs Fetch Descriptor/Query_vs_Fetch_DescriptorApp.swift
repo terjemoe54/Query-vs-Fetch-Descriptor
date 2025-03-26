@@ -3,7 +3,6 @@
 //  Query vs Fetch Descriptor
 //
 //  Created by Terje Moe on 20/03/2025.
-//
 
 import SwiftUI
 import SwiftData

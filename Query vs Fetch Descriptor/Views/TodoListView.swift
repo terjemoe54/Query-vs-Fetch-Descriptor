@@ -41,22 +41,6 @@ struct TodoListView: View {
             showCompletedOnly ? completedDateTodos : dateTodos
         }
     }
-    /*
-     // Fetch descriptor for all todos from now up until
-     // at most seven. (Seven days into the future)
-     
-     static var sevenDaysFetchDescriptor: FetchDescriptor<TodoModel> {
-     let now = Date()
-     let inAWeek = Calendar.current.date(byAdding: .day, value: 7, to: now)!
-     let descriptor = FetchDescriptor<TodoModel>(
-     predicate: #Predicate { $0.date <= inAWeek },sortBy: [SortDescriptor(\.date)])
-     
-     return descriptor
-     }
-     
-     @Query(TodoListView.sevenDaysFetchDescriptor)
-     private var sevenDaysTodo: [TodoModel]
-     */
     
     // Today todos
     static var todayFetchDescriptor: FetchDescriptor<TodoModel> {
